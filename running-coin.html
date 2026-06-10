@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$RUN — RUN TO EARN • EVERY KM PAYS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Teko:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#9945ff;
+    --green:#14f195;
+    --cyan:#19fb9b;
+    --bg:#06070d;
+    --bg2:#0b0d18;
+    --card:#11131f;
+    --line:#222538;
+    --txt:#eef0f7;
+    --mut:#8b90a6;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--txt);
+    font-family:'Barlow',sans-serif;
+    overflow-x:hidden;
+    position:relative;
+    line-height:1.5;
+  }
+
+  /* ---------- animated background ---------- */
+  .bg{position:fixed;inset:0;z-index:-3;background:
+    radial-gradient(900px 500px at 80% -10%, rgba(153,69,255,.22), transparent 70%),
+    radial-gradient(800px 600px at 0% 110%, rgba(20,241,149,.16), transparent 70%),
+    var(--bg);}
+  /* moving speed streaks */
+  .streaks{position:fixed;inset:-20%;z-index:-2;opacity:.18;pointer-events:none;
+    background:repeating-linear-gradient(115deg,transparent 0 90px,rgba(255,255,255,.03) 90px 92px);
+    animation:streak 9s linear infinite;}
+  @keyframes streak{to{transform:translateX(-92px);}}
+  /* faint route grid */
+  .grid{position:fixed;inset:0;z-index:-2;opacity:.22;pointer-events:none;
+    background:
+      linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px) 0 0/100% 46px,
+      linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px) 0 0/46px 100%;
+    mask-image:radial-gradient(circle at 50% 30%, #000 30%, transparent 80%);}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px;}
+
+  /* ---------- nav ---------- */
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 26px;backdrop-filter:blur(8px);
+    background:linear-gradient(180deg,rgba(6,7,13,.85),rgba(6,7,13,0));}
+  .logo{font-family:'Anton';font-size:26px;letter-spacing:1px;display:flex;align-items:center;gap:9px;}
+  .logo .dot{width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--green));box-shadow:0 0 14px var(--green);animation:pulse 1.6s infinite;}
+  @keyframes pulse{50%{transform:scale(1.35);opacity:.7;}}
+  .logo .run{background:linear-gradient(120deg,var(--purple),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .navlinks{display:flex;gap:10px;align-items:center;}
+  .nav-a{font-weight:600;font-size:14px;color:var(--mut);text-decoration:none;padding:9px 14px;border-radius:10px;transition:.15s;}
+  .nav-a:hover{color:#fff;background:rgba(255,255,255,.06);}
+  .nav-cta{font-weight:700;font-size:14px;text-decoration:none;padding:10px 18px;border-radius:11px;
+    background:linear-gradient(120deg,var(--purple),var(--green));color:#04120c;box-shadow:0 6px 22px rgba(20,241,149,.3);transition:.15s;}
+  .nav-cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(20,241,149,.45);}
+
+  /* ---------- hero ---------- */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;padding:130px 22px 70px;position:relative;}
+
+  .pill{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;
+    padding:7px 16px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);color:var(--cyan);margin-bottom:26px;letter-spacing:.3px;}
+  .pill .live{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.4s infinite;}
+
+  h1{font-family:'Anton';font-weight:400;line-height:.86;letter-spacing:1px;margin-bottom:18px;}
+  h1 .l1{display:block;font-size:clamp(44px,9vw,104px);color:#fff;}
+  h1 .l2{display:block;font-size:clamp(58px,13vw,150px);
+    background:linear-gradient(110deg,var(--purple),var(--cyan),var(--green),var(--purple));
+    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:flow 9s linear infinite;}
+  @keyframes flow{to{background-position:300% 0;}}
+
+  .lead{font-size:clamp(17px,2.5vw,22px);color:var(--mut);max-width:620px;margin:0 auto 16px;}
+  .lead b{color:#fff;font-weight:700;}
+
+  /* route svg */
+  .route{width:min(560px,90vw);height:74px;margin:6px auto 4px;display:block;}
+  .route .path{fill:none;stroke:var(--line);stroke-width:3;stroke-linecap:round;}
+  .route .prog{fill:none;stroke:url(#rg);stroke-width:4;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;animation:draw 4s ease-in-out infinite;}
+  @keyframes draw{0%{stroke-dashoffset:600;}55%{stroke-dashoffset:0;}100%{stroke-dashoffset:0;opacity:0;}}
+  .runner{font-size:26px;animation:trot 4s ease-in-out infinite;}
+  @keyframes trot{0%{offset-distance:0%;}55%{offset-distance:100%;}100%{offset-distance:100%;}}
+
+  /* ---------- CA box ---------- */
+  .ca-wrap{width:min(560px,94vw);margin:26px auto 0;background:var(--card);
+    border:1px solid var(--line);border-radius:18px;padding:20px;position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);}
+  .ca-top{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;letter-spacing:1.5px;color:var(--mut);text-transform:uppercase;margin-bottom:12px;}
+  .ca-top .ic{width:18px;height:18px;}
+
+  .ca-locked{font-family:'Teko';font-weight:600;font-size:30px;letter-spacing:2px;
+    text-align:center;color:#fff;background:#0a0c16;border:1px dashed var(--purple);
+    border-radius:12px;padding:14px;animation:glowp 2s ease-in-out infinite;}
+  .ca-locked small{display:block;font-family:'Barlow';font-size:13px;font-weight:600;letter-spacing:1px;color:var(--mut);margin-top:2px;}
+  @keyframes glowp{50%{border-color:var(--green);box-shadow:0 0 22px rgba(20,241,149,.25);}}
+
+  .ca-display{display:none;}
+  .ca-display.on{display:block;}
+  .ca-value{font-family:'Teko';font-size:24px;letter-spacing:1px;color:var(--green);
+    word-break:break-all;background:#0a0c16;border:1px solid var(--green);border-radius:12px;padding:12px 14px;text-align:left;}
+  .copy-btn{width:100%;margin-top:10px;font-family:'Barlow';font-weight:700;font-size:15px;cursor:pointer;
+    border:none;border-radius:12px;padding:13px;color:#04120c;
+    background:linear-gradient(120deg,var(--purple),var(--green));transition:.15s;}
+  .copy-btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(20,241,149,.4);}
+  .copy-btn.copied{background:var(--green);}
+
+  /* hero CTAs */
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:28px;}
+  .btn{font-weight:700;font-size:16px;text-decoration:none;padding:15px 28px;border-radius:13px;cursor:pointer;transition:.18s;display:inline-flex;align-items:center;gap:9px;}
+  .btn.primary{background:linear-gradient(120deg,var(--purple),var(--green));color:#04120c;box-shadow:0 10px 30px rgba(20,241,149,.32);}
+  .btn.primary:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(20,241,149,.5);}
+  .btn.ghost{background:rgba(255,255,255,.05);color:#fff;border:1px solid var(--line);}
+  .btn.ghost:hover{transform:translateY(-3px);background:rgba(255,255,255,.1);}
+
+  .scroll-hint{margin-top:44px;color:var(--mut);font-weight:600;font-size:14px;letter-spacing:1px;animation:bob 1.4s ease-in-out infinite;}
+  @keyframes bob{50%{transform:translateY(8px);}}
+
+  /* ---------- how it works ---------- */
+  section{padding:80px 0;position:relative;}
+  .eyebrow{text-align:center;font-weight:700;letter-spacing:3px;font-size:13px;color:var(--cyan);text-transform:uppercase;margin-bottom:10px;}
+  .h2{font-family:'Anton';font-weight:400;font-size:clamp(34px,6vw,60px);text-align:center;line-height:.95;margin-bottom:14px;}
+  .h2 .g{background:linear-gradient(120deg,var(--purple),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .sub{text-align:center;color:var(--mut);max-width:560px;margin:0 auto 50px;font-size:17px;}
+
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px 24px;position:relative;overflow:hidden;}
+  .step::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--purple),var(--green));}
+  .step .n{font-family:'Teko';font-weight:700;font-size:48px;line-height:1;color:transparent;-webkit-text-stroke:1.5px var(--purple);margin-bottom:8px;}
+  .step h3{font-size:21px;font-weight:700;margin-bottom:6px;}
+  .step p{color:var(--mut);font-size:15px;}
+
+  /* ---------- bounties ---------- */
+  .bounty-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+  .bounty{background:linear-gradient(180deg,var(--card),#0c0e1a);border:1px solid var(--line);
+    border-radius:20px;padding:26px 22px;position:relative;overflow:hidden;transition:.2s;text-align:center;}
+  .bounty:hover{transform:translateY(-8px);border-color:var(--green);box-shadow:0 22px 50px rgba(20,241,149,.16);}
+  .bounty .glow{position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(153,69,255,.4),transparent 70%);filter:blur(8px);opacity:.7;}
+  .bounty .tier{position:relative;font-weight:700;letter-spacing:2px;font-size:12px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;}
+  .bounty .icon{position:relative;margin-bottom:12px;}
+  .bounty .icon svg{width:46px;height:46px;display:block;margin:0 auto;}
+  .bounty .dist{position:relative;font-family:'Teko';font-weight:700;font-size:54px;line-height:.9;color:#fff;}
+  .bounty .dist small{display:block;font-family:'Barlow';font-weight:600;font-size:13px;letter-spacing:1px;color:var(--mut);margin-top:2px;}
+  .bounty .reward{position:relative;margin:18px auto 0;display:inline-flex;align-items:center;gap:7px;
+    font-family:'Teko';font-weight:700;font-size:30px;padding:6px 18px;border-radius:999px;
+    background:rgba(153,69,255,.12);border:1px solid var(--purple);color:#fff;}
+  .bounty .reward .sol{background:linear-gradient(120deg,var(--purple),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .bounty .claim{position:relative;margin-top:20px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;
+    font-family:'Barlow',sans-serif;font-weight:700;font-size:14px;padding:12px;border-radius:11px;
+    border:1px solid rgba(153,69,255,.45);background:rgba(153,69,255,.10);color:#e9eaf5;cursor:pointer;transition:.18s;}
+  .bounty .claim:hover{background:linear-gradient(120deg,var(--purple),var(--green));color:#04120c;border-color:transparent;transform:translateY(-1px);}
+
+  .note{text-align:center;color:var(--mut);font-size:14px;margin-top:34px;}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:46px 22px;text-align:center;color:var(--mut);}
+  footer .big{font-family:'Anton';font-size:34px;letter-spacing:1px;margin-bottom:10px;}
+  footer .big .g{background:linear-gradient(120deg,var(--purple),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  footer .socials{display:flex;gap:12px;justify-content:center;margin:16px 0;}
+  footer .socials a{color:var(--mut);text-decoration:none;font-weight:600;padding:8px 14px;border:1px solid var(--line);border-radius:10px;transition:.15s;}
+  footer .socials a:hover{color:#fff;border-color:var(--green);}
+  footer .disc{font-size:12px;opacity:.6;max-width:540px;margin:14px auto 0;}
+
+  @media(max-width:880px){
+    .steps{grid-template-columns:1fr;}
+    .bounty-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media(max-width:520px){
+    nav{padding:12px 16px;}
+    .navlinks .nav-a{display:none;}
+    .bounty-grid{grid-template-columns:1fr;}
+    .cta-row{flex-direction:column;}
+    .btn{width:100%;justify-content:center;}
+  }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="streaks"></div>
+  <div class="grid"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo"><span class="dot"></span>$<span class="run">RUN</span></div>
+    <div class="navlinks">
+      <a class="nav-a" href="#how">How it works</a>
+      <a class="nav-a" href="#bounties">Bounties</a>
+      <a class="nav-cta" href="#" id="navBuy">Buy on pump.fun</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="pill"><span class="live"></span> RUN-TO-EARN ON SOLANA</div>
+    <h1>
+      <span class="l1">RUNNING</span>
+      <span class="l2">COIN</span>
+    </h1>
+    <p class="lead"><b>Lace up. Log the kilometers. Get paid in SOL.</b><br>Hit a distance bounty and the reward drops straight to your wallet.</p>
+
+    <!-- animated route -->
+    <svg class="route" viewBox="0 0 560 74" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="rg" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#9945ff"/><stop offset="100%" stop-color="#14f195"/>
+        </linearGradient>
+      </defs>
+      <path id="routePath" class="path" d="M10,55 C90,5 150,70 230,40 S370,0 450,45 S530,60 550,30"/>
+      <path class="prog" d="M10,55 C90,5 150,70 230,40 S370,0 450,45 S530,60 550,30"/>
+      <text class="runner" style="offset-path:path('M10,55 C90,5 150,70 230,40 S370,0 450,45 S530,60 550,30');">🏃</text>
+    </svg>
+
+    <!-- CA BOX -->
+    <div class="ca-wrap">
+      <div class="ca-top"><span>◎ Contract Address</span></div>
+      <div id="caLocked">
+        <div class="ca-locked">XXXXXXXXXXXXXXXXXXX<small>Verify the official address before purchasing</small></div>
+      </div>
+      <div class="ca-display" id="caDisplay">
+        <div class="ca-value" id="caValue"></div>
+        <button class="copy-btn" id="copyBtn">Copy contract address</button>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn primary" href="#" id="buyBtn">◎ Buy on pump.fun</a>
+      <a class="btn ghost" href="#https://pump.fun/">View bounties ↓</a>
+    </div>
+
+    <div class="scroll-hint">Scroll to explore the bounties</div>
+  </header>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="eyebrow">How it works</div>
+      <div class="h2">RUN. PROVE. <span class="g">GET PAID.</span></div>
+      <p class="sub">Three steps between your running shoes and SOL in your wallet.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="n">1</div>
+          <h3>Run the distance</h3>
+          <p>Track your run with Strava, Garmin, Nike Run or Apple Fitness — whatever you already use.</p>
+        </div>
+        <div class="step">
+          <div class="n">2</div>
+          <h3>Submit your proof</h3>
+          <p>Connect your run data or upload the verified activity to claim the matching bounty.</p>
+        </div>
+        <div class="step">
+          <div class="n">3</div>
+          <h3>Earn SOL</h3>
+          <p>Once verified, the SOL reward is sent straight to your Solana wallet. Every km pays.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOUNTIES -->
+  <section id="bounties">
+    <div class="wrap">
+      <div class="eyebrow">Distance bounties</div>
+      <div class="h2">EVERY <span class="g">KILOMETER</span> PAYS</div>
+      <p class="sub">Pick a target, hit the distance, claim your SOL. The further you go, the bigger the bag.</p>
+
+      <div class="bounty-grid">
+        <!-- 5K -->
+        <div class="bounty">
+          <div class="glow"></div>
+          <div class="tier">Warm up</div>
+          <div class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="url(#rg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="24" cy="28" r="14"/><path d="M24 28 V20"/><path d="M24 28 L31 31"/><path d="M20 8 H28"/><path d="M24 8 V14"/><path d="M38 16 L41 13"/></svg></div>
+          <div class="dist">5<small>KILOMETERS</small></div>
+          <div class="reward">◎ <span class="sol">0.5</span> SOL</div>
+          <button class="claim">Go to pump.fun ↗</button>
+        </div>
+        <!-- 10K -->
+        <div class="bounty">
+          <div class="glow"></div>
+          <div class="tier">Pacer</div>
+          <div class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="url(#rg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M26 6 L14 27 H23 L22 42 L34 21 H25 Z"/></svg></div>
+          <div class="dist">10<small>KILOMETERS</small></div>
+          <div class="reward">◎ <span class="sol">1</span> SOL</div>
+          <button class="claim">Go to pump.fun ↗</button>
+        </div>
+        <!-- HALF -->
+        <div class="bounty">
+          <div class="glow"></div>
+          <div class="tier">Grinder</div>
+          <div class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="url(#rg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 6 C29 14 35 17 32 28 C30 37 24 41 24 41 C24 41 17 38 16 30 C15.5 26 18 24 19 21 C20.5 24 22 23 22 19 C25 21 25 13 24 6 Z"/></svg></div>
+          <div class="dist">21.1<small>HALF MARATHON</small></div>
+          <div class="reward">◎ <span class="sol">2</span> SOL</div>
+          <button class="claim">Go to pump.fun ↗</button>
+        </div>
+        <!-- MARATHON -->
+        <div class="bounty">
+          <div class="glow"></div>
+          <div class="tier">Legend</div>
+          <div class="icon"><svg viewBox="0 0 48 48" fill="none" stroke="url(#rg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 9 H32 V20 C32 25 28 28 24 28 C20 28 16 25 16 20 Z"/><path d="M16 12 H11 V15 C11 18 13 20 16 20"/><path d="M32 12 H37 V15 C37 18 35 20 32 20"/><path d="M24 28 V34"/><path d="M18 40 H30 L29 34 H19 Z"/></svg></div>
+          <div class="dist">42.2<small>FULL MARATHON</small></div>
+          <div class="reward">◎ <span class="sol">5</span> SOL</div>
+          <button class="claim">Go to pump.fun ↗</button>
+        </div>
+      </div>
+
+      <p class="note">More distance tiers & weekly streak bonuses dropping after launch. 🏅</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="big">$<span class="g">RUN</span> — RUNNING COIN</div>
+    <div class="socials">
+      <a href="#" id="xLink">𝕏 / Twitter</a>
+      <a href="#" id="tgLink">Telegram</a>
+      <a href="#" id="buyFooter">pump.fun</a>
+    </div>
+    <p class="disc">Run-to-earn rewards are community bounties and not financial advice. Always verify the official contract address before buying. Train safely and within your limits.</p>
+  </footer>
+
+<script>
+  /* ====== CONTRACT ADDRESS ======
+     >>> BEIM LAUNCH HIER DEINE CA EINTRAGEN <<<
+     z.B.  const CONTRACT = "7xKw...pump";
+     Leer lassen = es bleibt bei "CA DROPS AT LAUNCH". */
+  const CONTRACT = "";
+
+  const caLocked  = document.getElementById('caLocked');
+  const caDisplay = document.getElementById('caDisplay');
+  const caValue   = document.getElementById('caValue');
+  const copyBtn   = document.getElementById('copyBtn');
+
+  if (CONTRACT.trim()) {
+    caValue.textContent = CONTRACT.trim();
+    caDisplay.classList.add('on');
+    caLocked.style.display = 'none';
+  }
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard?.writeText(CONTRACT.trim()).catch(()=>{});
+    copyBtn.classList.add('copied');
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => { copyBtn.classList.remove('copied'); copyBtn.textContent = 'Copy contract address'; }, 1400);
+  });
+
+  /* ====== pump.fun link ======
+     Trag hier deinen Link ein, sobald der Coin live ist:
+     z.B.  const PUMP_LINK = "https://pump.fun/coin/DEINE_CA"; */
+  const PUMP_LINK = "https://pump.fun/";
+  function openPump(e){
+    e?.preventDefault();
+    const link = PUMP_LINK.trim() || (CONTRACT.trim() ? "https://pump.fun/coin/" + CONTRACT.trim() : "");
+    if (link) window.open(link, "_blank", "noopener");
+    else alert("pump.fun-Link noch nicht gesetzt — CA oder PUMP_LINK im Code eintragen.");
+  }
+  ['buyBtn','navBuy','buyFooter'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.addEventListener('click', openPump);
+  });
+
+  /* ====== claim buttons (placeholder until backend exists) ====== */
+  document.querySelectorAll('.claim').forEach(b=>{
+    b.addEventListener('click', ()=>{ openPump(); });
+  });
+</script>
+</body>
+</html>
